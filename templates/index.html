@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MASH Game - Themed Categories</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2em;
+            padding: 1em;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 2em;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 0.5em;
+            margin-top: 0.5em;
+            font-size: 1em;
+        }
+        button {
+            margin-top: 1em;
+            padding: 0.5em 1em;
+            font-size: 1em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        pre {
+            background-color: #eee;
+            padding: 1em;
+            border-radius: 5px;
+            margin-top: 1em;
+            white-space: pre-wrap; /* ✅ Fix to preserve indentation */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <label for="themeInput"><strong>Enter theme for MASH game</strong></label>
+    <input type="text" name="theme" id="themeInput" placeholder="e.g. classic, sci-fi, fantasy, celebrity">
+    <button onclick="getCategories()">Get Categories</button>
+
+    <pre id="result"></pre>
+</div>
+
+<script>
+    function getCategories() {
+        const theme = document.getElementById('themeInput').value;
+        const resultDiv = document.getElementById('result');
+        resultDiv.textContent = 'Loading...';
+        fetch(`/ai-categories?theme=${encodeURIComponent(theme)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch categories");
+                }
+                return response.json();
+            })
+            .then(data => {
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                resultDiv.textContent = 'Error fetching categories.';
+                console.error(error);
+            });
+    }
+</script>
+</body>
+</html>
